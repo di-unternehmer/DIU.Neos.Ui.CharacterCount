@@ -1,0 +1,7 @@
+Neos:
+  Neos:
+    Ui:
+      resources:
+        javascript:
+          'DIU.Neos.Ui.CharacterCount':
+            resource: resource://DIU.Neos.Ui.CharacterCount/Public/JavaScript/CharacterCount/Plugin.js
