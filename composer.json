@@ -1,9 +1,10 @@
 {
-    "description": "",
+    "description": "Displays a total character count in the main content collection of the current document node.",
     "type": "neos-package",
     "name": "diu/neos-ui-charactercount",
     "require": {
-        "neos/flow": "*"
+        "neos/neos": "*",
+        "neos/neos-ui": "*"
     },
     "autoload": {
         "psr-4": {

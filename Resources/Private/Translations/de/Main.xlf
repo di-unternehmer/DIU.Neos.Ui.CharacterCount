@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file original="" source-language="en" datatype="plaintext">
+        <body>
+            <trans-unit id="ccValid">
+              <target>Gesamtanzahl der Zeichen in der Content Collection</target>
+            </trans-unit>
+            <trans-unit id="ccOverlimit">
+                <target>Die Gesamtzahl der Charaktere in der Content Collection überschreitet das Limit!</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -256,14 +256,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var CharacterCount = (_dec = (0, _neosUiDecorators.neos)(function (globalRegistry) {
     return {
-        nodeTypeRegistry: globalRegistry.get('@neos-project/neos-ui-contentrepository')
+        nodeTypeRegistry: globalRegistry.get('@neos-project/neos-ui-contentrepository'),
+        i18nRegistry: globalRegistry.get('i18n'),
+        options: globalRegistry.get('frontendConfiguration').get('DIU_CharacterCount')
     };
 }), _dec2 = (0, _reactRedux.connect)((0, _plowJs.$transform)({
     state: function state(_state) {
         return _state;
     },
-    focusedNode: _neosUiReduxStore.selectors.CR.Nodes.focusedSelector,
-    focusedNodeParentLine: _neosUiReduxStore.selectors.CR.Nodes.focusedNodeParentLineSelector,
+    documentNode: _neosUiReduxStore.selectors.CR.Nodes.documentNodeSelector,
     nodesByContextPath: _neosUiReduxStore.selectors.CR.Nodes.nodesByContextPathSelector
 })), _dec(_class = _dec2(_class = (_temp = _class2 = function (_Component) {
     _inherits(CharacterCount, _Component);
@@ -277,40 +278,76 @@ var CharacterCount = (_dec = (0, _neosUiDecorators.neos)(function (globalRegistr
     _createClass(CharacterCount, [{
         key: 'render',
         value: function render() {
-            var _this2 = this;
+            var _props = this.props,
+                documentNode = _props.documentNode,
+                nodeTypeRegistry = _props.nodeTypeRegistry,
+                nodesByContextPath = _props.nodesByContextPath,
+                options = _props.options,
+                i18nRegistry = _props.i18nRegistry;
 
-            var closestContentCollection = this.props.focusedNodeParentLine.find(function (node) {
-                return _this2.props.nodeTypeRegistry.hasRole(node.nodeType, 'contentCollection');
+            if (!documentNode) {
+                return null;
+            }
+            if (!options.textProperties) {
+                console.warn('No text properties setting');
+                return null;
+            }
+            var characterCountLimit = (0, _plowJs.$get)('properties.characterCountLimit', documentNode);
+            if (!characterCountLimit) {
+                return null;
+            }
+            var mainContentCollection = documentNode.children.find(function (node) {
+                return nodeTypeRegistry.hasRole(node.nodeType, 'contentCollection');
             });
-            if (closestContentCollection) {
-                var totalTextLength = closestContentCollection.children.map(function (child) {
-                    var node = _this2.props.nodesByContextPath[child.contextPath];
-                    var textProperties = ['title', 'text'];
-                    var textLength = textProperties.map(function (property) {
-                        return (0, _plowJs.$get)(['properties', property], node);
-                    }).map(function (property) {
-                        return typeof property === 'string' ? property.length : 0;
-                    }).reduce(function (a, b) {
-                        return a + b;
-                    }, 0);
-                    return textLength;
+            if (!mainContentCollection) {
+                return null;
+            }
+            var mainContentCollectionNode = nodesByContextPath[mainContentCollection.contextPath];
+            if (!mainContentCollectionNode) {
+                return null;
+            }
+            var totalTextLength = mainContentCollectionNode.children.map(function (child) {
+                var node = nodesByContextPath[child.contextPath];
+                var textLength = options.textProperties.map(function (property) {
+                    return (0, _plowJs.$get)(['properties', property], node);
+                }).map(function (property) {
+                    return typeof property === 'string' ? property.replace(/(<([^>]+)>)/ig, '').length : 0;
                 }).reduce(function (a, b) {
                     return a + b;
                 }, 0);
-                return _react2.default.createElement(
-                    'div',
-                    { style: { display: 'inline-block', marginTop: '9px' } },
-                    'Character count: ',
+                return textLength;
+            }).reduce(function (a, b) {
+                return a + b;
+            }, 0);
+            var isOverlimit = totalTextLength > characterCountLimit;
+            return _react2.default.createElement(
+                'div',
+                {
+                    style: {
+                        display: 'inline-block',
+                        height: '100%',
+                        padding: '9px',
+                        background: isOverlimit ? '#ff460d' : 'transparent',
+                        cursor: 'default'
+                    },
+                    title: isOverlimit ? i18nRegistry.translate('DIU.Neos.Ui.CharacterCount:Main:ccOverlimit') : i18nRegistry.translate('DIU.Neos.Ui.CharacterCount:Main:ccValid')
+                },
+                _react2.default.createElement(_reactUiComponents.Icon, { icon: 'closed-captioning' }),
+                ' ',
+                _react2.default.createElement(
+                    'strong',
+                    null,
                     totalTextLength
-                );
-            }
-            return null;
+                ),
+                characterCountLimit ? ' / ' + characterCountLimit : ''
+            );
         }
     }]);
 
     return CharacterCount;
 }(_react.Component), _class2.propTypes = {
-    focusedNodeParentLine: _propTypes2.default.array.isRequired
+    documentNode: _propTypes2.default.object.isRequired,
+    options: _propTypes2.default.object.isRequired
 }, _temp)) || _class) || _class);
 exports.default = CharacterCount;
 

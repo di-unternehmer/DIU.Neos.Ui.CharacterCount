@@ -1,0 +1,11 @@
+'DIU.Neos.Ui.CharacterCount:CharacterCountLimitMixin':
+  properties:
+    characterCountLimit:
+      type: integer
+      defaultValue: 10000
+      ui:
+        label: i18n
+        reloadPageIfChanged: false
+        inspector:
+          group: 'document'
+          position: 'end'

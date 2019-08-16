@@ -1,7 +1,18 @@
 Neos:
   Neos:
+    userInterface:
+      translation:
+        autoInclude:
+          DIU.Neos.Ui.CharacterCount:
+            - Main
+            - 'NodeTypes/*'
     Ui:
       resources:
         javascript:
           'DIU.Neos.Ui.CharacterCount':
             resource: resource://DIU.Neos.Ui.CharacterCount/Public/JavaScript/CharacterCount/Plugin.js
+      frontendConfiguration:
+        DIU_CharacterCount:
+          textProperties:
+            - 'title'
+            - 'text'
