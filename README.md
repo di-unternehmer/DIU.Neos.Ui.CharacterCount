@@ -1,5 +1,7 @@
 # DIU.Neos.Ui.CharacterCount
 
+!!! This repo is not maintained anymore and therefore archived
+
 Little package to display a total character count in the main content collection of the current document node.
 
 ## Installation
